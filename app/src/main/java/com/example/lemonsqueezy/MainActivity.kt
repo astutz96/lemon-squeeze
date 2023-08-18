@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,8 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LemonSqueezyApp(modifier: Modifier = Modifier) {
     Surface(
-        modifier = Modifier.fillMaxSize()
-            .wrapContentSize(Alignment.Center),
+        modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         SqueezeImageWithStatus()
@@ -45,7 +44,9 @@ fun LemonSqueezyApp(modifier: Modifier = Modifier) {
 @Composable
 fun SqueezeImageWithStatus() {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Button(
             //When the button is clicked the value of result changes,
