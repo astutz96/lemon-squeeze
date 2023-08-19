@@ -7,11 +7,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,40 +30,73 @@ class MainActivity : ComponentActivity() {
         setContent {
             LemonSqueezyTheme {
                 // A surface container using the 'background' color from the theme
-                LemonSqueezyApp()
+                LemonSqueezeApp()
             }
         }
     }
 }
 
 @Composable
-fun LemonSqueezyApp(modifier: Modifier = Modifier) {
+fun LemonSqueezeApp(modifier: Modifier = Modifier) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
     ) {
-        SqueezeImageWithStatus()
+        var status by remember { mutableStateOf(1) }
+        var squeezeCount by remember { mutableStateOf(1) }
+        when (status) {
+            1 -> {
+                SqueezeImageWithStatus(imageResourceId = R.drawable.lemon_tree,
+                    textResourceId = R.string.tap_tree,
+                    onImageClick = {
+                        status++
+                        squeezeCount = (2..4).random()
+                    })
+            }
+
+            2 -> {
+                SqueezeImageWithStatus(imageResourceId = R.drawable.lemon_squeeze,
+                    textResourceId = R.string.tap_lemon,
+                    onImageClick = {
+                        squeezeCount--
+                        if (squeezeCount == 0) {
+                            status = 3;
+                        }
+                    })
+            }
+
+            3 -> {
+                SqueezeImageWithStatus(imageResourceId = R.drawable.lemon_drink,
+                    textResourceId = R.string.tap_full_glass,
+                    onImageClick = {
+                        status++
+                    })
+            }
+
+            4 -> {
+                SqueezeImageWithStatus(imageResourceId = R.drawable.lemon_restart,
+                    textResourceId = R.string.tap_empty_glass,
+                    onImageClick = { status = 1 })
+            }
+        }
     }
 }
 
 @Composable
-fun SqueezeImageWithStatus() {
+fun SqueezeImageWithStatus(imageResourceId: Int, textResourceId: Int, onImageClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            //When the button is clicked the value of result changes,
-            //Result is being Remembered with a MutableStateOf().
-            // Causing the value to be observed, and any changes will cause recomposition
-            //of the composable DiceWithButtonAndImage
-            onClick = {},
+            onClick = onImageClick,
+            shape = RoundedCornerShape(5)
         ) {
-            Image(painter = painterResource(id = R.drawable.lemon_tree), null)
+            Image(
+                painterResource(id = imageResourceId), null
+            )
         }
-
-        Text(stringResource(R.string.tap_tree))
+        Text(stringResource(textResourceId))
     }
 }
 
@@ -66,6 +104,6 @@ fun SqueezeImageWithStatus() {
 @Composable
 fun GreetingPreview() {
     LemonSqueezyTheme {
-        LemonSqueezyApp()
+        LemonSqueezeApp()
     }
 }
